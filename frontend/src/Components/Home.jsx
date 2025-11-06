@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Home.css";
 
 const Home = () => {
@@ -14,40 +15,72 @@ const Home = () => {
   const [message, setMessage] = useState("");
   const [darkMode, setDarkMode] = useState(false);
 
-  // ✅ Check if token exists
+  // Redirect to login if token missing & prevent back navigation
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) navigate("/login", { replace: true });
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    // Lock back button
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, [navigate]);
 
-  // ✅ Logout handler
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
-  // ✅ Form change handler
+  // Handle form input changes
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // ✅ Form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Async function to submit form
+  const submitForm = async () => {
     try {
-      await api.post("/user/details", formData); // backend endpoint
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://127.0.0.1:8000/user/create",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        }
+      );
       setMessage("Details saved successfully!");
+      setFormData({ name: "", email: "", phone: "", address: "" });
     } catch (err) {
-      setMessage("Failed to save details.");
+      setMessage(err.response?.data?.message || "Failed to save details.");
       console.error(err);
     }
   };
 
-  // ✅ Smooth scroll to section
+  // Handle form submit without page refresh
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submitForm();
+  };
+
+  // Smooth scroll
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const goToChat = () => {
+    navigate("/chat");
   };
 
   return (
@@ -56,6 +89,7 @@ const Home = () => {
       <header className="header">
         <h2 className="logo">MyPortfolio</h2>
         <div className="nav-buttons">
+          <button onClick={goToChat}>Chat App</button>
           <button onClick={() => scrollToSection("about")}>About</button>
           <button onClick={() => scrollToSection("skills")}>Skills</button>
           <button onClick={() => scrollToSection("contact")}>Contact</button>
@@ -110,6 +144,7 @@ const Home = () => {
             type="text"
             name="name"
             placeholder="Full Name"
+            value={formData.name}
             onChange={handleChange}
             required
           />
@@ -117,6 +152,7 @@ const Home = () => {
             type="email"
             name="email"
             placeholder="Email Address"
+            value={formData.email}
             onChange={handleChange}
             required
           />
@@ -124,12 +160,14 @@ const Home = () => {
             type="text"
             name="phone"
             placeholder="Phone Number"
+            value={formData.phone}
             onChange={handleChange}
           />
           <input
             type="text"
             name="address"
             placeholder="Address"
+            value={formData.address}
             onChange={handleChange}
           />
           <button type="submit" className="submit-btn">
@@ -143,24 +181,18 @@ const Home = () => {
       <section id="about" className="section about-section">
         <h2 className="section-title">About Me</h2>
         <div className="about-content">
-          <img
-            src="/profile.jpg"
-            alt="Profile"
-            className="profile-img"
-          />
+          <img src="/profile.jpg" alt="Profile" className="profile-img" />
           <p>
             Hi! I'm a passionate web developer building modern, responsive, and
-            aesthetic applications. I specialize in React, FastAPI, Python,
-            and MySQL. I love creating interactive UI/UX experiences and
-            exploring new technologies. Let's build something amazing together!
+            aesthetic applications. I specialize in React, FastAPI, Python, and
+            MySQL. I love creating interactive UI/UX experiences and exploring
+            new technologies. Let's build something amazing together!
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="footer">
-        &copy; 2025 My Portfolio. All rights reserved.
-      </footer>
+      <footer className="footer">&copy; 2025 My Portfolio. All rights reserved.</footer>
     </div>
   );
 };

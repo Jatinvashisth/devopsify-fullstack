@@ -4,6 +4,7 @@ from .database import engine
 from .routers import product, login, user
 from fastapi.middleware.cors import CORSMiddleware
 
+
 # Create DB tables
 models.Base.metadata.create_all(bind=engine)
 
@@ -14,6 +15,7 @@ app = FastAPI()
 app.include_router(product.router)
 app.include_router(user.router)
 app.include_router(login.router)
+
 
 # Allowed origins
 origins = [

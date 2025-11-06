@@ -5,7 +5,10 @@ class UserData(BaseModel):
     name: str
     email: EmailStr
     phone: float
-    address: EmailStr
+    address: str
+
+    class Config:
+        from_attributes = True  # ✅ for Pydantic v2 (replaces orm_mode
 
 
 class DisplayUser(BaseModel):
