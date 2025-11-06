@@ -1,0 +1,97 @@
+/* Wrapper */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Container */
+.auth-container {
+  background: #1c1c1c;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  width: 360px;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+.auth-container:hover {
+  transform: translateY(-5px);
+}
+
+/* Form Box */
+.form-box h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: #f0f0f0;
+}
+.subtext {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: none;
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #00f0ff;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: #00f0ff;
+  color: #1c1c1c;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+.btn:hover {
+  background: #00c1cc;
+  transform: scale(1.05);
+}
+
+/* Switch text */
+.switch-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #bbb;
+}
+.switch-text span {
+  color: #00f0ff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.switch-text span:hover {
+  color: #00c1cc;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .auth-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}
