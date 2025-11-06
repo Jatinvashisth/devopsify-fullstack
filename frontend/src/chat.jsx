@@ -8,6 +8,14 @@ const Chat = () => {
   const listRef = useRef(null);
   const navigate = useNavigate();
 
+  // Check login token on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
+
   // Auto scroll
   useEffect(() => {
     if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
